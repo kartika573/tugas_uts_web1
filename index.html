@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Pustaka Nusantara - Toko Buku Online Terpercaya">
+  <title>Login | Pustaka Nusantara</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📚</text></svg>">
+  <link rel="stylesheet" href="css/style.css">
+
+  <!-- CSS INTERNAL: Gaya khusus halaman login (hero background, layout dua kolom) -->
+  <style>
+    /* CSS INTERNAL - Khusus halaman login */
+    .login-wrapper {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      background: var(--bg-body);
+    }
+
+    /* Kolom kiri: branding/ilustrasi */
+    .login-branding {
+      background: linear-gradient(145deg, #3730a3 0%, #4f46e5 40%, #0d9488 100%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 3rem;
+      position: relative;
+      overflow: hidden;
+      color: white;
+    }
+
+    .login-branding::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.06'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    }
+
+    .branding-logo {
+      font-size: 5rem;
+      margin-bottom: 1.5rem;
+      animation: float 3s ease-in-out infinite;
+      position: relative;
+      z-index: 1;
+    }
+
+    .branding-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.8rem, 3vw, 2.5rem);
+      font-weight: 700;
+      color: white;
+      margin-bottom: 0.75rem;
+      text-align: center;
+      position: relative;
+      z-index: 1;
+    }
+
+    .branding-subtitle {
+      color: rgba(255,255,255,0.8);
+      text-align: center;
+      font-size: 1rem;
+      max-width: 320px;
+      position: relative;
+      z-index: 1;
+      line-height: 1.6;
+    }
+
+    .branding-features {
+      margin-top: 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: 280px;
+    }
+
+    .branding-feature {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      color: rgba(255,255,255,0.9);
+      font-size: 0.9375rem;
+    }
+
+    .branding-feature-icon {
+      width: 36px;
+      height: 36px;
+      background: rgba(255,255,255,0.2);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    /* Kolom kanan: form */
+    .login-form-side {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 3rem 2.5rem;
+      overflow-y: auto;
+      background: var(--bg-surface);
+    }
+
+    .login-form-box {
+      width: 100%;
+      max-width: 420px;
+    }
+
+    .login-header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .login-header h1 {
+      font-size: 1.75rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .login-header p {
+      color: var(--text-muted);
+      font-size: 0.9375rem;
+    }
+
+    .login-actions {
+      display: flex;
+      gap: 0.75rem;
+      margin-top: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .login-footer-links {
+      text-align: center;
+      margin-top: 1.5rem;
+      font-size: 0.875rem;
+      color: var(--text-muted);
+    }
+
+    .login-footer-links button {
+      background: none;
+      border: none;
+      color: var(--clr-primary-600);
+      font-size: inherit;
+      cursor: pointer;
+      text-decoration: underline;
+    }
+
+    /* Responsif mobile */
+    @media (max-width: 768px) {
+      .login-wrapper {
+        grid-template-columns: 1fr;
+      }
+      .login-branding {
+        padding: 2rem 1.5rem;
+        min-height: 200px;
+      }
+      .branding-features { display: none; }
+      .branding-logo { font-size: 3.5rem; }
+      .branding-title { font-size: 1.5rem; }
+      .login-form-side { padding: 2rem 1.25rem; }
+    }
+
+    /* Tema toggle pojok kanan atas */
+    .login-tema-btn {
+      position: fixed;
+      top: 1rem;
+      right: 1rem;
+      z-index: 100;
+    }
+  </style>
+</head>
+<body data-page="login">
+
+  <!-- CSS INLINE: Tombol tema di pojok kanan atas -->
+  <div class="login-tema-btn">
+    <button class="theme-toggle" id="btn-tema-login" aria-label="Toggle tema gelap/terang" style="background:var(--bg-surface);box-shadow:var(--shadow-md);">
+      <span class="tema-label">🌙 Gelap</span>
+    </button>
+  </div>
+
+  <main class="login-wrapper">
+    <!-- Kolom Kiri: Branding -->
+    <aside class="login-branding" aria-label="Informasi aplikasi Pustaka Nusantara">
+      <div class="branding-logo" aria-hidden="true">📚</div>
+      <p class="branding-title" role="presentation">Pustaka Nusantara</p>
+      <p class="branding-subtitle">
+        Platform pemesanan buku online terpercaya untuk kebutuhan literasi Anda.
+      </p>
+      <div class="branding-features">
+        <div class="branding-feature">
+          <div class="branding-feature-icon" aria-hidden="true">📖</div>
+          <span>Koleksi buku lengkap & terkini</span>
+        </div>
+        <div class="branding-feature">
+          <div class="branding-feature-icon" aria-hidden="true">🚚</div>
+          <span>Pengiriman cepat ke seluruh Indonesia</span>
+        </div>
+        <div class="branding-feature">
+          <div class="branding-feature-icon" aria-hidden="true">🔒</div>
+          <span>Transaksi aman & terpercaya</span>
+        </div>
+        <div class="branding-feature">
+          <div class="branding-feature-icon" aria-hidden="true">📦</div>
+          <span>Lacak pesanan secara realtime</span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Kolom Kanan: Form Login -->
+    <section class="login-form-side" aria-labelledby="heading-login">
+      <div class="login-form-box anim-fadeinup">
+        <header class="login-header">
+          <!-- CSS INLINE: warna aksen pada ikon -->
+          <div aria-hidden="true" style="font-size:2.5rem;margin-bottom:0.5rem;">👤</div>
+          <h1 id="heading-login">Masuk ke Akun Anda</h1>
+          <p>Selamat datang kembali! Silakan masuk untuk melanjutkan.</p>
+        </header>
+
+        <form id="form-login" novalidate aria-label="Form Login">
+          <!-- Field Email -->
+          <div class="form-group">
+            <label class="form-label" for="input-email">
+              Email <span class="required" aria-hidden="true">*</span>
+            </label>
+            <div class="input-group">
+              <span class="input-icon" aria-hidden="true">📧</span>
+              <input
+                type="email"
+                id="input-email"
+                name="email"
+                class="form-control has-icon-left"
+                placeholder="contoh@email.com"
+                required
+                autocomplete="email"
+                aria-required="true"
+                aria-describedby="email-error"
+              >
+            </div>
+            <span class="form-error" id="email-error" role="alert"></span>
+          </div>
+
+          <!-- Field Password -->
+          <div class="form-group">
+            <label class="form-label" for="input-password">
+              Password <span class="required" aria-hidden="true">*</span>
+            </label>
+            <div class="input-group">
+              <span class="input-icon" aria-hidden="true">🔑</span>
+              <input
+                type="password"
+                id="input-password"
+                name="password"
+                class="form-control has-icon-left has-icon-right"
+                placeholder="Masukkan password"
+                required
+                autocomplete="current-password"
+                aria-required="true"
+                aria-describedby="password-error"
+              >
+              <button type="button" class="input-icon-right" id="btn-tampil-password" aria-label="Tampilkan password">
+                👁️
+              </button>
+            </div>
+            <span class="form-error" id="password-error" role="alert"></span>
+          </div>
+
+          <!-- Tombol Login -->
+          <button type="submit" class="btn btn-primary btn-block btn-lg" style="margin-top:0.5rem;">
+            🔐 Masuk
+          </button>
+
+          <!-- Aksi Tambahan -->
+          <div class="login-actions">
+            <button type="button" class="btn btn-outline-primary" id="btn-lupa-password" aria-haspopup="dialog">
+              🔒 Lupa Password?
+            </button>
+            <button type="button" class="btn btn-secondary" id="btn-daftar" aria-haspopup="dialog">
+              ✍️ Daftar Akun
+            </button>
+          </div>
+        </form>
+
+        <!-- Info Akun Uji Coba -->
+        <div class="login-footer-links" style="margin-top:1.5rem;">
+          <details style="text-align:left;background:var(--bg-surface-2);padding:0.75rem;border-radius:var(--radius-md);border:1px solid var(--border-color);">
+            <summary style="cursor:pointer;font-weight:600;color:var(--text-primary);">💡 Akun Uji Coba</summary>
+            <div style="margin-top:0.5rem;font-size:0.8125rem;">
+              <p><strong>Admin:</strong> admin@pustaka.com / admin123</p>
+              <p><strong>User:</strong> budi@gmail.com / budi123</p>
+            </div>
+          </details>
+        </div>
+
+      </div>
+    </section>
+  </main>
+
+  <!-- =============================================
+       MODAL: LUPA PASSWORD
+       ============================================= -->
+  <div class="modal-overlay" id="modal-lupa-password" role="dialog" aria-modal="true" aria-labelledby="modal-lupa-title" aria-hidden="true">
+    <div class="modal-box modal-sm">
+      <div class="modal-header">
+        <h2 class="modal-title" id="modal-lupa-title">🔒 Lupa Password</h2>
+        <button class="modal-close" data-tutup-modal aria-label="Tutup modal">✕</button>
+      </div>
+      <div class="modal-body">
+        <p style="margin-bottom:1rem;color:var(--text-secondary);">
+          Masukkan email Anda. Kami akan mengirimkan tautan untuk mereset password ke inbox Anda.
+        </p>
+        <form id="form-lupa-password" novalidate>
+          <div class="form-group">
+            <label class="form-label" for="input-email-reset">
+              Email <span class="required" aria-hidden="true">*</span>
+            </label>
+            <div class="input-group">
+              <span class="input-icon" aria-hidden="true">📧</span>
+              <input
+                type="email"
+                id="input-email-reset"
+                name="email-reset"
+                class="form-control has-icon-left"
+                placeholder="contoh@email.com"
+                required
+                aria-required="true"
+              >
+            </div>
+            <span class="form-error" role="alert"></span>
+          </div>
+          <p id="pesan-reset" style="display:none;margin-bottom:0.75rem;font-size:0.875rem;font-weight:500;"></p>
+          <button type="submit" class="btn btn-primary btn-block">📨 Kirim Tautan Reset</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- =============================================
+       MODAL: DAFTAR AKUN
+       ============================================= -->
+  <div class="modal-overlay" id="modal-daftar" role="dialog" aria-modal="true" aria-labelledby="modal-daftar-title" aria-hidden="true">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h2 class="modal-title" id="modal-daftar-title">✍️ Buat Akun Baru</h2>
+        <button class="modal-close" data-tutup-modal aria-label="Tutup modal">✕</button>
+      </div>
+      <div class="modal-body">
+        <form id="form-daftar" novalidate aria-label="Form Pendaftaran">
+          <!-- Nama -->
+          <div class="form-group">
+            <label class="form-label" for="input-nama-daftar">
+              Nama Lengkap <span class="required" aria-hidden="true">*</span>
+            </label>
+            <div class="input-group">
+              <span class="input-icon" aria-hidden="true">👤</span>
+              <input type="text" id="input-nama-daftar" class="form-control has-icon-left" placeholder="Nama lengkap Anda" required aria-required="true">
+            </div>
+            <span class="form-error" role="alert"></span>
+          </div>
+
+          <!-- Email -->
+          <div class="form-group">
+            <label class="form-label" for="input-email-daftar">
+              Email <span class="required" aria-hidden="true">*</span>
+            </label>
+            <div class="input-group">
+              <span class="input-icon" aria-hidden="true">📧</span>
+              <input type="email" id="input-email-daftar" class="form-control has-icon-left" placeholder="contoh@email.com" required aria-required="true">
+            </div>
+            <span class="form-error" role="alert"></span>
+          </div>
+
+          <!-- Password -->
+          <div class="form-group">
+            <label class="form-label" for="input-password-daftar">
+              Password <span class="required" aria-hidden="true">*</span>
+              <span class="text-muted" style="font-weight:400;">(min. 6 karakter)</span>
+            </label>
+            <div class="input-group">
+              <span class="input-icon" aria-hidden="true">🔑</span>
+              <input type="password" id="input-password-daftar" class="form-control has-icon-left has-icon-right" placeholder="Buat password" required aria-required="true" aria-describedby="strength-label">
+              <button type="button" class="input-icon-right" id="btn-tampil-password-daftar" aria-label="Tampilkan password">👁️</button>
+            </div>
+            <span class="form-error" role="alert"></span>
+            <!-- Indikator kekuatan password -->
+            <div class="password-strength" id="password-strength" aria-live="polite">
+              <div class="strength-bar">
+                <div class="strength-fill" id="strength-fill"></div>
+              </div>
+              <span class="strength-label" id="strength-label"></span>
+            </div>
+          </div>
+
+          <!-- Konfirmasi Password -->
+          <div class="form-group">
+            <label class="form-label" for="input-konfirmasi-password">
+              Konfirmasi Password <span class="required" aria-hidden="true">*</span>
+            </label>
+            <div class="input-group">
+              <span class="input-icon" aria-hidden="true">🔑</span>
+              <input type="password" id="input-konfirmasi-password" class="form-control has-icon-left has-icon-right" placeholder="Ulangi password" required aria-required="true">
+              <button type="button" class="input-icon-right" id="btn-tampil-konfirmasi" aria-label="Tampilkan konfirmasi password">👁️</button>
+            </div>
+            <span class="form-error" role="alert"></span>
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-block btn-lg">🚀 Buat Akun</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div id="toast-container" aria-live="polite" aria-atomic="false"></div>
+
+  <script src="js/data.js"></script>
+  <script src="js/script.js"></script>
+</body>
+</html>
+

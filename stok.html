@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Katalog Buku - Pustaka Nusantara">
+  <title>Katalog Buku | Pustaka Nusantara</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📚</text></svg>">
+  <link rel="stylesheet" href="css/style.css">
+
+  <!-- CSS INTERNAL: Gaya khusus halaman stok/katalog -->
+  <style>
+    /* CSS INTERNAL - Khusus halaman stok */
+    .stok-toolbar {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+      background: var(--bg-surface);
+      padding: 1rem;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-color);
+      margin-bottom: 1.5rem;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .stok-toolbar .search-box {
+      flex: 1;
+      min-width: 180px;
+    }
+
+    .info-role {
+      background: var(--clr-primary-50);
+      border: 1px solid var(--clr-primary-200);
+      border-radius: var(--radius-md);
+      padding: 0.625rem 1rem;
+      font-size: 0.875rem;
+      color: var(--clr-primary-700);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+
+    [data-theme="dark"] .info-role {
+      background: rgba(99,102,241,0.1);
+      border-color: rgba(99,102,241,0.3);
+      color: var(--clr-primary-300);
+    }
+  </style>
+</head>
+<body data-page="stok">
+
+  <div class="page-wrapper">
+    <!-- Navbar -->
+    <div id="navbar-main"></div>
+
+    <main class="main-content">
+
+      <!-- Header Halaman -->
+      <header class="page-header" role="banner">
+        <div class="container">
+          <nav class="breadcrumb" aria-label="Breadcrumb">
+            <a href="dashboard.html">🏠 Dashboard</a>
+            <span class="breadcrumb-sep">›</span>
+            <span class="breadcrumb-current">Katalog Buku</span>
+          </nav>
+          <h1>📚 Katalog Buku</h1>
+          <p>Temukan koleksi buku terlengkap dari berbagai kategori</p>
+        </div>
+      </header>
+
+      <div class="container section">
+
+        <!-- Info Role -->
+        <div class="info-role" id="info-role-banner" aria-live="polite">
+          <!-- Diisi oleh JS berdasarkan role -->
+        </div>
+
+        <!-- Toolbar -->
+        <div class="stok-toolbar" role="search" aria-label="Filter dan pencarian buku">
+          <!-- Pencarian -->
+          <div class="search-box">
+            <span class="search-icon" aria-hidden="true">🔍</span>
+            <input
+              type="search"
+              id="input-cari"
+              placeholder="Cari buku, kode, atau jenis..."
+              aria-label="Cari buku"
+              autocomplete="off"
+            >
+          </div>
+
+          <!-- Filter Jenis -->
+          <select id="filter-jenis" class="form-control" style="width:auto;min-width:140px;" aria-label="Filter berdasarkan jenis buku">
+            <option value="">Semua Jenis</option>
+            <!-- Diisi oleh JS -->
+          </select>
+
+          <!-- Toggle Tampilan -->
+          <button class="btn btn-secondary" id="btn-toggle-tampilan" aria-label="Toggle tampilan tabel atau grid">
+            ⊞ Grid
+          </button>
+
+          <!-- Tambah Buku (hanya Admin) -->
+          <button class="btn btn-primary" id="btn-tambah-buku" aria-label="Tambah buku baru" aria-haspopup="dialog">
+            ➕ Tambah Buku
+          </button>
+        </div>
+
+        <!-- Counter data -->
+        <p id="data-counter" class="text-muted text-sm" style="margin-bottom:0.75rem;" aria-live="polite">Memuat data...</p>
+
+        <!-- Kontainer Tabel/Grid (diisi oleh JS) -->
+        <section id="kontainer-stok" aria-label="Daftar buku" aria-live="polite">
+          <!-- Skeleton loading awal -->
+          <div class="table-wrapper">
+            <table aria-label="Memuat data buku...">
+              <thead>
+                <tr>
+                  <th>Cover</th><th>Kode</th><th>Nama Buku</th><th>Jenis</th>
+                  <th>Edisi</th><th>Stok</th><th>Harga</th><th>Aksi</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td colspan="8" style="text-align:center;padding:2rem;">
+                  <div class="skeleton" style="width:60%;height:16px;margin:0 auto 0.5rem;"></div>
+                  <div class="skeleton" style="width:80%;height:16px;margin:0 auto 0.5rem;"></div>
+                  <div class="skeleton" style="width:50%;height:16px;margin:0 auto;"></div>
+                </td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+      </div>
+    </main>
+
+    <footer class="site-footer" role="contentinfo">
+      <div class="container">
+        <p>&copy; 2025 <strong>Pustaka Nusantara</strong> &mdash; Toko Buku Online Terpercaya</p>
+      </div>
+    </footer>
+  </div>
+
+  <!-- =============================================
+       MODAL: TAMBAH BUKU BARU
+       ============================================= -->
+  <div class="modal-overlay" id="modal-tambah-buku" role="dialog" aria-modal="true" aria-labelledby="modal-tambah-title" aria-hidden="true">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h2 class="modal-title" id="modal-tambah-title">➕ Tambah Buku Baru</h2>
+        <button class="modal-close" data-tutup-modal aria-label="Tutup modal">✕</button>
+      </div>
+      <div class="modal-body">
+        <form id="form-tambah-buku" novalidate aria-label="Form tambah buku baru">
+          <div class="grid-2">
+            <!-- Kode Barang -->
+            <div class="form-group">
+              <label class="form-label" for="tb-kode">Kode Barang <span class="required">*</span></label>
+              <input type="text" id="tb-kode" class="form-control" placeholder="cth: BK006" required aria-required="true">
+              <span class="form-error" role="alert"></span>
+            </div>
+
+            <!-- Jenis -->
+            <div class="form-group">
+              <label class="form-label" for="tb-jenis">Jenis <span class="required">*</span></label>
+              <input type="text" id="tb-jenis" class="form-control" placeholder="cth: Pendidikan" required aria-required="true">
+              <span class="form-error" role="alert"></span>
+            </div>
+          </div>
+
+          <!-- Nama Buku -->
+          <div class="form-group">
+            <label class="form-label" for="tb-nama">Nama Buku <span class="required">*</span></label>
+            <input type="text" id="tb-nama" class="form-control" placeholder="Nama lengkap buku" required aria-required="true">
+            <span class="form-error" role="alert"></span>
+          </div>
+
+          <div class="grid-2">
+            <!-- Edisi -->
+            <div class="form-group">
+              <label class="form-label" for="tb-edisi">Edisi</label>
+              <input type="text" id="tb-edisi" class="form-control" placeholder="cth: Edisi 1">
+            </div>
+
+            <!-- Stok -->
+            <div class="form-group">
+              <label class="form-label" for="tb-stok">Stok <span class="required">*</span></label>
+              <input type="number" id="tb-stok" class="form-control" placeholder="0" min="0" required aria-required="true">
+              <span class="form-error" role="alert"></span>
+            </div>
+          </div>
+
+          <!-- Harga -->
+          <div class="form-group">
+            <label class="form-label" for="tb-harga">Harga (Rp) <span class="required">*</span></label>
+            <input type="number" id="tb-harga" class="form-control" placeholder="cth: 150000" min="1" required aria-required="true">
+            <span class="form-hint">Masukkan angka saja, contoh: 150000</span>
+            <span class="form-error" role="alert"></span>
+          </div>
+
+          <div class="modal-footer" style="border:none;padding:0;margin-top:1rem;">
+            <button type="button" class="btn btn-secondary" data-tutup-modal>Batal</button>
+            <button type="submit" class="btn btn-primary">💾 Simpan Buku</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- =============================================
+       MODAL: EDIT STOK
+       ============================================= -->
+  <div class="modal-overlay" id="modal-edit-stok" role="dialog" aria-modal="true" aria-labelledby="modal-edit-title" aria-hidden="true">
+    <div class="modal-box modal-sm">
+      <div class="modal-header">
+        <h2 class="modal-title" id="modal-edit-title">✏️ Edit Stok</h2>
+        <button class="modal-close" data-tutup-modal aria-label="Tutup modal">✕</button>
+      </div>
+      <div class="modal-body">
+        <p style="margin-bottom:1rem;color:var(--text-secondary);">
+          Buku: <strong id="modal-edit-nama">-</strong>
+        </p>
+        <form id="form-edit-stok" novalidate>
+          <input type="hidden" id="modal-edit-kode">
+          <div class="form-group">
+            <label class="form-label" for="modal-edit-stok">Stok Baru <span class="required">*</span></label>
+            <input type="number" id="modal-edit-stok" class="form-control" min="0" required aria-required="true">
+            <span class="form-error" role="alert"></span>
+          </div>
+          <div style="display:flex;gap:0.75rem;justify-content:flex-end;">
+            <button type="button" class="btn btn-secondary" data-tutup-modal>Batal</button>
+            <button type="submit" class="btn btn-primary">💾 Simpan</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scroll to Top -->
+  <button id="scroll-top" aria-label="Kembali ke atas halaman">↑</button>
+
+  <!-- Toast Container -->
+  <div id="toast-container" aria-live="polite" aria-atomic="false"></div>
+
+  <script src="js/data.js"></script>
+  <script src="js/script.js"></script>
+</body>
+</html>
+
+

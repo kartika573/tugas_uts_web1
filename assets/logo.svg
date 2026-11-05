@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <!-- Background -->
+  <rect width="200" height="200" rx="40" fill="#6366f1"/>
+  <!-- Book shape 1 (kiri) -->
+  <rect x="40" y="50" width="50" height="110" rx="6" fill="white" opacity="0.9"/>
+  <rect x="45" y="55" width="8" height="100" rx="3" fill="#c7d2fe"/>
+  <!-- Book shape 2 (kanan) -->
+  <rect x="95" y="40" width="65" height="120" rx="6" fill="white"/>
+  <rect x="100" y="45" width="8" height="110" rx="3" fill="#a5b4fc"/>
+  <!-- Lines on right book -->
+  <rect x="115" y="65" width="35" height="6" rx="3" fill="#c7d2fe"/>
+  <rect x="115" y="80" width="35" height="6" rx="3" fill="#c7d2fe"/>
+  <rect x="115" y="95" width="25" height="6" rx="3" fill="#c7d2fe"/>
+  <!-- Accent star -->
+  <circle cx="155" cy="45" r="12" fill="#fbbf24"/>
+  <text x="155" y="50" text-anchor="middle" font-size="14" fill="white">★</text>
+</svg>
+

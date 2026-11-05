@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Laporan Pemesanan - Pustaka Nusantara">
+  <title>Laporan Pemesanan | Pustaka Nusantara</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📚</text></svg>">
+  <link rel="stylesheet" href="css/style.css">
+
+  <!-- CSS INTERNAL: Gaya khusus halaman laporan (termasuk @media print) -->
+  <style>
+    /* CSS INTERNAL - Khusus halaman laporan */
+
+    .laporan-stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .laporan-stat-card {
+      background: var(--bg-surface);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border-color);
+      padding: 1.5rem;
+      text-align: center;
+      box-shadow: var(--shadow-sm);
+      transition: all 0.25s;
+    }
+
+    .laporan-stat-card:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .laporan-stat-icon {
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .laporan-stat-value {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--clr-primary-700);
+      margin-bottom: 0.25rem;
+    }
+
+    .laporan-stat-label {
+      font-size: 0.8125rem;
+      color: var(--text-muted);
+    }
+
+    /* Grafik Batang */
+    .grafik-container {
+      background: var(--bg-surface);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border-color);
+      padding: 1.5rem;
+      box-shadow: var(--shadow-sm);
+      margin-bottom: 2rem;
+    }
+
+    .grafik-container h3 { margin-bottom: 1rem; }
+
+    /* Gunakan class bar-item/bar-fill dari style.css eksternal */
+    .bar-chart-wrap {
+      display: flex;
+      align-items: flex-end;
+      gap: 1rem;
+      height: 200px;
+      padding: 2rem 0 0;
+      border-bottom: 2px solid var(--border-color);
+      overflow-x: auto;
+      min-width: 0;
+    }
+
+    /* Print styles tambahan khusus laporan */
+    @media print {
+      .laporan-stats {
+        grid-template-columns: repeat(4, 1fr) !important;
+      }
+      .laporan-stat-card {
+        border: 1px solid #ccc !important;
+        page-break-inside: avoid;
+      }
+      .grafik-container {
+        page-break-inside: avoid;
+      }
+      .print-header {
+        display: block !important;
+        text-align: center;
+        margin-bottom: 1.5rem;
+        padding-bottom: 1rem;
+        border-bottom: 2px solid #333;
+      }
+    }
+
+    .print-header {
+      display: none;
+    }
+
+    .empty-laporan {
+      text-align: center;
+      padding: 3rem 1rem;
+    }
+
+    .empty-laporan .ikon {
+      font-size: 5rem;
+      margin-bottom: 1rem;
+      animation: float 3s ease-in-out infinite;
+    }
+  </style>
+</head>
+<body data-page="laporan">
+
+  <div class="page-wrapper">
+    <!-- Navbar -->
+    <div id="navbar-main"></div>
+
+    <main class="main-content">
+
+      <!-- Header Cetak (hanya muncul saat print) -->
+      <div class="print-header" role="presentation">
+        <p style="font-size:1.5rem;font-weight:700;font-family:'Playfair Display',serif;margin-bottom:0.5rem;">LAPORAN PEMESANAN BUKU</p>
+        <p>Pustaka Nusantara &mdash; Toko Buku Online</p>
+        <p>Dicetak pada: <span id="tgl-cetak"></span></p>
+      </div>
+
+      <!-- Header Halaman -->
+      <header class="page-header" role="banner">
+        <div class="container">
+          <nav class="breadcrumb" aria-label="Breadcrumb">
+            <a href="dashboard.html">🏠 Dashboard</a>
+            <span class="breadcrumb-sep">›</span>
+            <span class="breadcrumb-current">Laporan Pemesanan</span>
+          </nav>
+          <div style="display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:1rem;">
+            <div>
+              <h1>📊 Laporan Pemesanan</h1>
+              <p>Ringkasan penjualan dan statistik transaksi buku</p>
+            </div>
+            <!-- CSS INLINE: Tombol cetak dengan warna aksen -->
+            <button class="btn btn-warning btn-lg" id="btn-cetak" aria-label="Cetak laporan ini" style="background:#f59e0b;color:white;">
+              🖨️ Cetak Laporan
+            </button>
+          </div>
+        </div>
+      </header>
+
+      <div class="container section">
+
+        <!-- Empty State (jika tidak ada transaksi) -->
+        <div id="laporan-empty" style="display:none;">
+          <div class="empty-laporan">
+            <div class="ikon" aria-hidden="true">📋</div>
+            <h2>Belum Ada Transaksi</h2>
+            <p style="color:var(--text-muted);margin-bottom:1.5rem;">
+              Laporan akan muncul setelah ada transaksi. Buat pesanan pertama Anda sekarang!
+            </p>
+            <a href="checkout.html" class="btn btn-primary btn-lg">🛒 Buat Pesanan Pertama</a>
+          </div>
+        </div>
+
+        <!-- Konten Laporan -->
+        <div id="laporan-konten">
+
+          <!-- Kartu Statistik -->
+          <section aria-labelledby="heading-statistik-laporan">
+            <h2 id="heading-statistik-laporan" style="margin-bottom:1rem;">📌 Ringkasan Statistik</h2>
+            <div class="laporan-stats">
+              <div class="laporan-stat-card">
+                <div class="laporan-stat-icon" aria-hidden="true">🛒</div>
+                <div class="laporan-stat-value" id="stat-total-pesanan">0</div>
+                <div class="laporan-stat-label">Total Pesanan</div>
+              </div>
+              <div class="laporan-stat-card">
+                <div class="laporan-stat-icon" aria-hidden="true">📚</div>
+                <div class="laporan-stat-value" id="stat-buku-terjual">0</div>
+                <div class="laporan-stat-label">Buku Terjual</div>
+              </div>
+              <div class="laporan-stat-card">
+                <div class="laporan-stat-icon" aria-hidden="true">💰</div>
+                <div class="laporan-stat-value" id="stat-pendapatan" style="font-size:1.1rem;">Rp 0</div>
+                <div class="laporan-stat-label">Total Pendapatan</div>
+              </div>
+              <div class="laporan-stat-card">
+                <div class="laporan-stat-icon" aria-hidden="true">🏆</div>
+                <div class="laporan-stat-value" id="stat-terlaris" style="font-size:0.9rem;">-</div>
+                <div class="laporan-stat-label">Buku Terlaris</div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Grafik Batang -->
+          <section class="grafik-container" aria-labelledby="heading-grafik">
+            <h3 id="heading-grafik">📈 Grafik Penjualan per Buku</h3>
+            <p class="text-muted text-sm" style="margin-bottom:1rem;">Jumlah buku terjual per judul (dari transaksi)</p>
+            <div class="bar-chart" id="grafik-batang" role="img" aria-label="Grafik batang penjualan buku" style="height:200px;align-items:flex-end;display:flex;gap:1rem;padding:0.5rem 0;border-bottom:2px solid var(--border-color);overflow-x:auto;">
+              <!-- Diisi JS -->
+              <p class="text-muted" style="width:100%;text-align:center;align-self:center;">Memuat grafik...</p>
+            </div>
+          </section>
+
+          <!-- Tabel Rekap per Buku -->
+          <section aria-labelledby="heading-rekap">
+            <h2 id="heading-rekap" style="margin-bottom:1rem;">📋 Rekap Penjualan per Buku</h2>
+            <div class="table-wrapper">
+              <table id="tabel-rekap" aria-label="Tabel rekap penjualan buku">
+                <thead>
+                  <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Nama Buku</th>
+                    <th scope="col" style="text-align:center;">Total Terjual (Eksemplar)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <!-- Diisi JS -->
+                  <tr>
+                    <td colspan="3" style="text-align:center;color:var(--text-muted);padding:2rem;">Memuat data...</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+
+        </div><!-- /#laporan-konten -->
+
+      </div>
+    </main>
+
+    <footer class="site-footer" role="contentinfo">
+      <div class="container">
+        <p>&copy; 2025 <strong>Pustaka Nusantara</strong> &mdash; Toko Buku Online Terpercaya</p>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Scroll to Top -->
+  <button id="scroll-top" aria-label="Kembali ke atas halaman">↑</button>
+
+  <!-- Toast Container -->
+  <div id="toast-container" aria-live="polite" aria-atomic="false"></div>
+
+  <script src="js/data.js"></script>
+  <script src="js/script.js"></script>
+  <script>
+    // Tanggal cetak
+    document.addEventListener('DOMContentLoaded', () => {
+      const el = document.getElementById('tgl-cetak');
+      if (el) el.textContent = new Date().toLocaleDateString('id-ID', { weekday:'long', year:'numeric', month:'long', day:'numeric' });
+    });
+  </script>
+</body>
+</html>
+
+

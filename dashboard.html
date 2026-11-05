@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Dashboard Pustaka Nusantara - Toko Buku Online">
+  <title>Dashboard | Pustaka Nusantara</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📚</text></svg>">
+  <link rel="stylesheet" href="css/style.css">
+
+  <!-- CSS INTERNAL: Gaya khusus halaman dashboard (hero greeting, kartu navigasi) -->
+  <style>
+    /* CSS INTERNAL - Khusus halaman dashboard */
+    .hero-greeting {
+      background: linear-gradient(135deg, #3730a3 0%, #4f46e5 50%, #0d9488 100%);
+      padding: 2.5rem 0;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-greeting::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .hero-greeting-text h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.4rem, 3vw, 2rem);
+      color: white;
+      margin-bottom: 4px;
+    }
+
+    .hero-greeting-text p {
+      color: rgba(255,255,255,0.75);
+      font-size: 0.9375rem;
+    }
+
+    .hero-clock {
+      text-align: right;
+      color: white;
+    }
+
+    .hero-clock .jam {
+      font-size: clamp(1.5rem, 4vw, 2.5rem);
+      font-weight: 700;
+      font-family: 'Inter', monospace;
+      letter-spacing: 2px;
+    }
+
+    .hero-clock .tanggal {
+      font-size: 0.875rem;
+      color: rgba(255,255,255,0.75);
+    }
+
+    /* Kartu Navigasi */
+    .nav-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 1.25rem;
+    }
+
+    .nav-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-xl);
+      padding: 1.75rem;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.75rem;
+      text-decoration: none;
+      transition: all 0.25s ease;
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+    }
+
+    .nav-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--clr-primary-500), var(--clr-teal-500));
+      transform: scaleX(0);
+      transition: transform 0.3s ease;
+      transform-origin: left;
+    }
+
+    .nav-card:hover {
+      transform: translateY(-6px);
+      box-shadow: var(--shadow-lg);
+      border-color: var(--clr-primary-200);
+    }
+
+    .nav-card:hover::before { transform: scaleX(1); }
+
+    .nav-card-icon {
+      font-size: 2.5rem;
+      line-height: 1;
+      margin-bottom: 0.25rem;
+    }
+
+    .nav-card-title {
+      font-size: 1.0625rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      font-family: 'Playfair Display', serif;
+    }
+
+    .nav-card-desc {
+      font-size: 0.875rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    .nav-card-arrow {
+      margin-top: auto;
+      font-size: 1.25rem;
+      color: var(--clr-primary-500);
+      transition: transform 0.2s;
+    }
+
+    .nav-card:hover .nav-card-arrow {
+      transform: translateX(6px);
+    }
+
+    /* Grid Statistik */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 1rem;
+    }
+
+    @media (max-width: 480px) {
+      .hero-clock { text-align: left; }
+      .hero-content { flex-direction: column; align-items: flex-start; }
+      .nav-cards { grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+      .nav-card { padding: 1.25rem; }
+      .nav-card-icon { font-size: 2rem; }
+    }
+  </style>
+</head>
+<body data-page="dashboard">
+
+  <div class="page-wrapper">
+    <!-- Navbar (dirender oleh JS) -->
+    <div id="navbar-main"></div>
+
+    <main class="main-content" id="main-konten">
+      <!-- Judul halaman untuk aksesibilitas (hidden) -->
+      <h1 class="sr-only">Dashboard Pustaka Nusantara</h1>
+
+      <!-- Hero Greeting -->
+      <section class="hero-greeting" aria-labelledby="greeting-teks">
+        <div class="container">
+          <div class="hero-content">
+            <div class="hero-greeting-text">
+              <nav class="breadcrumb" aria-label="Breadcrumb">
+                <span>🏠</span>
+                <span class="breadcrumb-sep">›</span>
+                <span class="breadcrumb-current">Dashboard</span>
+              </nav>
+              <h2 id="greeting-teks">Selamat Datang!</h2>
+              <p id="greeting-role">Memuat info pengguna...</p>
+            </div>
+            <div class="hero-clock">
+              <div class="jam" id="jam-digital" aria-live="polite" aria-label="Jam sekarang">00:00:00</div>
+              <div class="tanggal" id="tgl-sekarang">-</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div class="container section">
+
+        <!-- Kartu Statistik -->
+        <section aria-labelledby="heading-statistik">
+          <h2 id="heading-statistik" style="margin-bottom:1rem;">📊 Ringkasan</h2>
+          <div class="stats-grid">
+            <!-- CSS INLINE: warna ikon berbeda tiap kartu -->
+            <div class="stat-card">
+              <div class="stat-icon" style="background:#eef2ff;">📚</div>
+              <div class="stat-info">
+                <div class="stat-label">Total Judul Buku</div>
+                <div class="stat-value" id="stat-judul">-</div>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon" style="background:#ccfbf1;">📦</div>
+              <div class="stat-info">
+                <div class="stat-label">Total Stok</div>
+                <div class="stat-value" id="stat-stok">-</div>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon" style="background:#fef3c7;">🛒</div>
+              <div class="stat-info">
+                <div class="stat-label">Jumlah Transaksi</div>
+                <div class="stat-value" id="stat-transaksi">-</div>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon" style="background:#d1fae5;">💰</div>
+              <div class="stat-info">
+                <div class="stat-label">Total Pendapatan</div>
+                <div class="stat-value" id="stat-pendapatan" style="font-size:1rem;">-</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Kartu Navigasi Utama -->
+        <section aria-labelledby="heading-navigasi" style="margin-top:2.5rem;">
+          <h2 id="heading-navigasi" style="margin-bottom:1rem;">🗂️ Menu Utama</h2>
+          <div class="nav-cards">
+            <a href="stok.html" class="nav-card" aria-label="Navigasi ke halaman Informasi Stok dan Katalog Buku">
+              <div class="nav-card-icon" aria-hidden="true">📚</div>
+              <div class="nav-card-title">Informasi Stok / Katalog</div>
+              <p class="nav-card-desc">Lihat daftar buku tersedia, cek stok, filter jenis, dan tambahkan buku ke keranjang belanja.</p>
+              <span class="nav-card-arrow" aria-hidden="true">→</span>
+            </a>
+
+            <a href="tracking.html" class="nav-card" aria-label="Navigasi ke halaman Tracking Pengiriman">
+              <div class="nav-card-icon" aria-hidden="true">📦</div>
+              <div class="nav-card-title">Tracking Pengiriman</div>
+              <p class="nav-card-desc">Lacak status pengiriman pesanan Anda menggunakan Nomor Delivery Order (DO).</p>
+              <span class="nav-card-arrow" aria-hidden="true">→</span>
+            </a>
+
+            <a href="laporan.html" class="nav-card" aria-label="Navigasi ke halaman Laporan Pemesanan">
+              <div class="nav-card-icon" aria-hidden="true">📊</div>
+              <div class="nav-card-title">Laporan Pemesanan</div>
+              <p class="nav-card-desc">Lihat ringkasan laporan penjualan, buku terlaris, dan grafik pendapatan. Bisa dicetak.</p>
+              <span class="nav-card-arrow" aria-hidden="true">→</span>
+            </a>
+
+            <a href="history.html" class="nav-card" aria-label="Navigasi ke halaman History Transaksi">
+              <div class="nav-card-icon" aria-hidden="true">📋</div>
+              <div class="nav-card-title">History Transaksi</div>
+              <p class="nav-card-desc">Riwayat semua transaksi pembelian buku. Cari, filter, dan lacak detail setiap pesanan.</p>
+              <span class="nav-card-arrow" aria-hidden="true">→</span>
+            </a>
+          </div>
+        </section>
+
+        <!-- Aksi Cepat -->
+        <section aria-labelledby="heading-aksi" style="margin-top:2.5rem;">
+          <h2 id="heading-aksi" style="margin-bottom:1rem;">⚡ Aksi Cepat</h2>
+          <div style="display:flex;gap:0.75rem;flex-wrap:wrap;">
+            <a href="checkout.html" class="btn btn-primary btn-lg">
+              🛒 Buat Pesanan Baru
+            </a>
+            <a href="stok.html" class="btn btn-outline-primary btn-lg">
+              📚 Lihat Katalog
+            </a>
+            <a href="tracking.html" class="btn btn-secondary btn-lg">
+              🔍 Lacak Pengiriman
+            </a>
+          </div>
+        </section>
+
+      </div>
+    </main>
+
+    <footer class="site-footer" role="contentinfo">
+      <div class="container">
+        <p>
+          &copy; 2025 <strong>Pustaka Nusantara</strong> &mdash; Toko Buku Online Terpercaya
+          &bull; Toko Buku Online Terpercaya
+        </p>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Modal Logout (dirender oleh JS) -->
+
+  <!-- Scroll to Top -->
+  <button id="scroll-top" aria-label="Kembali ke atas halaman">↑</button>
+
+  <!-- Toast Container -->
+  <div id="toast-container" aria-live="polite" aria-atomic="false"></div>
+
+  <script src="js/data.js"></script>
+  <script src="js/script.js"></script>
+</body>
+</html>
+
+

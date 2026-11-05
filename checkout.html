@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Pemesanan Buku - Pustaka Nusantara">
+  <title>Pemesanan | Pustaka Nusantara</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📚</text></svg>">
+  <link rel="stylesheet" href="css/style.css">
+
+  <!-- CSS INTERNAL: Gaya khusus halaman checkout -->
+  <style>
+    /* CSS INTERNAL - Khusus halaman checkout */
+    .checkout-layout {
+      display: grid;
+      grid-template-columns: 1fr 360px;
+      gap: 1.5rem;
+      align-items: start;
+    }
+
+    .checkout-sidebar {
+      position: sticky;
+      top: calc(var(--nav-height) + 1rem);
+    }
+
+    .payment-method {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .payment-option {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.75rem 1rem;
+      border: 1.5px solid var(--border-color);
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      transition: all 0.2s;
+      background: var(--bg-surface);
+    }
+
+    .payment-option:hover {
+      border-color: var(--clr-primary-400);
+      background: var(--clr-primary-50);
+    }
+
+    .payment-option input[type="radio"] {
+      accent-color: var(--clr-primary-600);
+      width: 18px;
+      height: 18px;
+    }
+
+    .payment-option input[type="radio"]:checked ~ * {
+      color: var(--clr-primary-700);
+    }
+
+    .payment-option:has(input:checked) {
+      border-color: var(--clr-primary-500);
+      background: var(--clr-primary-50);
+    }
+
+    .ekspedisi-option {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      padding: 0.75rem 1rem;
+      border: 1.5px solid var(--border-color);
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      transition: all 0.2s;
+      background: var(--bg-surface);
+      flex-wrap: wrap;
+    }
+
+    .ekspedisi-option:has(input:checked) {
+      border-color: var(--clr-primary-500);
+      background: var(--clr-primary-50);
+    }
+
+    .ekspedisi-option input[type="radio"] {
+      accent-color: var(--clr-primary-600);
+      width: 18px;
+      height: 18px;
+    }
+
+    @media (max-width: 900px) {
+      .checkout-layout {
+        grid-template-columns: 1fr;
+      }
+      .checkout-sidebar {
+        position: static;
+      }
+    }
+
+    [data-theme="dark"] .payment-option:has(input:checked),
+    [data-theme="dark"] .ekspedisi-option:has(input:checked) {
+      background: rgba(99,102,241,0.1);
+    }
+  </style>
+</head>
+<body data-page="checkout">
+
+  <div class="page-wrapper">
+    <!-- Navbar -->
+    <div id="navbar-main"></div>
+
+    <main class="main-content">
+
+      <!-- Header -->
+      <header class="page-header" role="banner">
+        <div class="container">
+          <nav class="breadcrumb" aria-label="Breadcrumb">
+            <a href="dashboard.html">🏠 Dashboard</a>
+            <span class="breadcrumb-sep">›</span>
+            <span class="breadcrumb-current">Pemesanan</span>
+          </nav>
+          <h1>🛒 Pemesanan Buku</h1>
+          <p>Lengkapi detail pesanan Anda untuk memproses pengiriman</p>
+        </div>
+      </header>
+
+      <div class="container section">
+        <form id="form-checkout" novalidate aria-label="Form Pemesanan Buku">
+          <div class="checkout-layout">
+
+            <!-- Kolom Utama (kiri/atas) -->
+            <div>
+
+              <!-- BAGIAN 1: KERANJANG PESANAN -->
+              <section class="card" aria-labelledby="heading-keranjang" style="margin-bottom:1.5rem;">
+                <div class="card-header">
+                  <div class="section-step">
+                    <div class="step-number">1</div>
+                    <h2 class="step-title" id="heading-keranjang">Daftar Pesanan</h2>
+                  </div>
+                </div>
+                <div class="card-body">
+                  <!-- Tambah buku ke keranjang -->
+                  <div style="display:flex;gap:0.75rem;margin-bottom:1rem;flex-wrap:wrap;" role="group" aria-label="Tambah buku ke keranjang">
+                    <select id="select-buku" class="form-control" style="flex:1;min-width:200px;" aria-label="Pilih buku untuk dipesan">
+                      <option value="">-- Pilih Buku --</option>
+                      <!-- Diisi JS -->
+                    </select>
+                    <button type="button" class="btn btn-primary" id="btn-tambah-ke-keranjang" aria-label="Tambahkan buku terpilih ke keranjang">
+                      ➕ Tambah ke Keranjang
+                    </button>
+                  </div>
+
+                  <!-- Tabel Keranjang -->
+                  <div class="table-wrapper" style="margin-bottom:0;">
+                    <table id="tabel-keranjang" aria-label="Daftar buku dalam keranjang">
+                      <thead>
+                        <tr>
+                          <th scope="col">#</th>
+                          <th scope="col">Buku</th>
+                          <th scope="col">Harga</th>
+                          <th scope="col">Jumlah</th>
+                          <th scope="col">Subtotal</th>
+                          <th scope="col">Hapus</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <!-- Diisi JS -->
+                      </tbody>
+                    </table>
+                  </div>
+
+                  <!-- Total Keranjang -->
+                  <div style="text-align:right;margin-top:1rem;padding-top:1rem;border-top:1px solid var(--border-color);">
+                    <span class="text-muted">Subtotal Keranjang: </span>
+                    <strong style="font-size:1.125rem;color:var(--clr-primary-600);" id="subtotal-keranjang">Rp 0</strong>
+                  </div>
+                </div>
+              </section>
+
+              <!-- BAGIAN 2: DATA PEMESAN -->
+              <section class="card" aria-labelledby="heading-pemesan" style="margin-bottom:1.5rem;">
+                <div class="card-header">
+                  <div class="section-step">
+                    <div class="step-number">2</div>
+                    <h2 class="step-title" id="heading-pemesan">Data Pemesan</h2>
+                  </div>
+                </div>
+                <div class="card-body">
+                  <div class="grid-2">
+                    <!-- Nama -->
+                    <div class="form-group">
+                      <label class="form-label" for="pemesan-nama">
+                        Nama Lengkap <span class="required" aria-hidden="true">*</span>
+                      </label>
+                      <input type="text" id="pemesan-nama" class="form-control" placeholder="Nama lengkap pemesan" required aria-required="true">
+                      <span class="form-error" role="alert"></span>
+                    </div>
+
+                    <!-- Email -->
+                    <div class="form-group">
+                      <label class="form-label" for="pemesan-email">
+                        Email <span class="required" aria-hidden="true">*</span>
+                      </label>
+                      <input type="email" id="pemesan-email" class="form-control" placeholder="email@contoh.com" required aria-required="true">
+                      <span class="form-error" role="alert"></span>
+                    </div>
+                  </div>
+
+                  <!-- No HP -->
+                  <div class="form-group">
+                    <label class="form-label" for="pemesan-hp">
+                      No. HP <span class="required" aria-hidden="true">*</span>
+                    </label>
+                    <input type="tel" id="pemesan-hp" class="form-control" placeholder="cth: 081234567890" required aria-required="true" aria-describedby="hp-hint">
+                    <span class="form-hint" id="hp-hint">Format: diawali 08, 10-13 digit</span>
+                    <span class="form-error" role="alert"></span>
+                  </div>
+
+                  <!-- Alamat -->
+                  <div class="form-group">
+                    <label class="form-label" for="pemesan-alamat">
+                      Alamat Lengkap <span class="required" aria-hidden="true">*</span>
+                    </label>
+                    <textarea id="pemesan-alamat" class="form-control" placeholder="Jl. Contoh No. 123, RT/RW..." required aria-required="true" rows="3"></textarea>
+                    <span class="form-error" role="alert"></span>
+                  </div>
+
+                  <div class="grid-2">
+                    <!-- Kota -->
+                    <div class="form-group">
+                      <label class="form-label" for="pemesan-kota">
+                        Kota <span class="required" aria-hidden="true">*</span>
+                      </label>
+                      <input type="text" id="pemesan-kota" class="form-control" placeholder="cth: Jakarta" required aria-required="true">
+                      <span class="form-error" role="alert"></span>
+                    </div>
+
+                    <!-- Kode Pos -->
+                    <div class="form-group">
+                      <label class="form-label" for="pemesan-kodepos">
+                        Kode Pos <span class="required" aria-hidden="true">*</span>
+                      </label>
+                      <input type="text" id="pemesan-kodepos" class="form-control" placeholder="cth: 12345" maxlength="5" required aria-required="true">
+                      <span class="form-hint">5 digit angka</span>
+                      <span class="form-error" role="alert"></span>
+                    </div>
+                  </div>
+                </div>
+              </section>
+
+              <!-- BAGIAN 3: PEMBAYARAN -->
+              <section class="card" aria-labelledby="heading-bayar">
+                <div class="card-header">
+                  <div class="section-step">
+                    <div class="step-number">3</div>
+                    <h2 class="step-title" id="heading-bayar">Pembayaran & Pengiriman</h2>
+                  </div>
+                </div>
+                <div class="card-body">
+
+                  <!-- Metode Pembayaran -->
+                  <div class="form-group" role="group" aria-labelledby="label-metode-bayar">
+                    <p class="form-label" id="label-metode-bayar">
+                      Metode Pembayaran <span class="required" aria-hidden="true">*</span>
+                    </p>
+                    <div class="payment-method">
+                      <label class="payment-option">
+                        <input type="radio" name="metode-bayar" value="Transfer Bank" checked>
+                        <!-- CSS INLINE: Warna ikon metode pembayaran -->
+                        <span style="font-size:1.5rem;" aria-hidden="true">🏦</span>
+                        <div>
+                          <strong>Transfer Bank</strong>
+                          <p class="text-muted text-sm">BCA, Mandiri, BNI, BRI</p>
+                        </div>
+                      </label>
+                      <label class="payment-option">
+                        <input type="radio" name="metode-bayar" value="E-Wallet">
+                        <span style="font-size:1.5rem;" aria-hidden="true">💳</span>
+                        <div>
+                          <strong>E-Wallet</strong>
+                          <p class="text-muted text-sm">GoPay, OVO, Dana, ShopeePay</p>
+                        </div>
+                      </label>
+                      <label class="payment-option">
+                        <input type="radio" name="metode-bayar" value="Kartu Kredit">
+                        <span style="font-size:1.5rem;" aria-hidden="true">💰</span>
+                        <div>
+                          <strong>Kartu Kredit</strong>
+                          <p class="text-muted text-sm">Visa, MasterCard, JCB</p>
+                        </div>
+                      </label>
+                      <label class="payment-option">
+                        <input type="radio" name="metode-bayar" value="COD">
+                        <span style="font-size:1.5rem;" aria-hidden="true">🤝</span>
+                        <div>
+                          <strong>COD (Bayar di Tempat)</strong>
+                          <p class="text-muted text-sm">Bayar saat barang tiba</p>
+                        </div>
+                      </label>
+                    </div>
+                  </div>
+
+                  <!-- Field tambahan: No Kartu (hanya Kartu Kredit) -->
+                  <div class="form-group d-none" id="field-no-kartu">
+                    <label class="form-label" for="input-no-kartu">Nomor Kartu Kredit</label>
+                    <input type="text" id="input-no-kartu" class="form-control" placeholder="XXXX-XXXX-XXXX-XXXX" maxlength="19" aria-label="Nomor kartu kredit">
+                    <span class="form-hint">16 digit, format: 1234-5678-9012-3456</span>
+                  </div>
+
+                  <!-- Field tambahan: E-Wallet -->
+                  <div class="form-group d-none" id="field-ewallet">
+                    <label class="form-label" for="input-ewallet">Pilih E-Wallet</label>
+                    <select id="input-ewallet" class="form-control" aria-label="Pilih platform e-wallet">
+                      <option>GoPay</option>
+                      <option>OVO</option>
+                      <option>Dana</option>
+                      <option>ShopeePay</option>
+                    </select>
+                  </div>
+
+                  <!-- Field tambahan: Bank -->
+                  <div class="form-group" id="field-bank">
+                    <label class="form-label" for="input-bank">Pilih Bank</label>
+                    <select id="input-bank" class="form-control" aria-label="Pilih bank tujuan transfer">
+                      <option>BCA</option>
+                      <option>Mandiri</option>
+                      <option>BNI</option>
+                      <option>BRI</option>
+                    </select>
+                  </div>
+
+                  <hr class="divider">
+
+                  <!-- Ekspedisi -->
+                  <div class="form-group" role="group" aria-labelledby="label-ekspedisi">
+                    <p class="form-label" id="label-ekspedisi">
+                      Ekspedisi Pengiriman <span class="required" aria-hidden="true">*</span>
+                    </p>
+                    <div style="display:flex;flex-direction:column;gap:0.5rem;">
+                      <label class="ekspedisi-option">
+                        <div style="display:flex;align-items:center;gap:0.75rem;">
+                          <input type="radio" name="ekspedisi" value="JNE" data-ongkir="15000">
+                          <span style="font-size:1.25rem;" aria-hidden="true">🚚</span>
+                          <div>
+                            <strong>JNE REG</strong>
+                            <p class="text-muted text-sm">Estimasi 2-3 hari kerja</p>
+                          </div>
+                        </div>
+                        <span class="badge badge-primary">Rp 15.000</span>
+                      </label>
+                      <label class="ekspedisi-option">
+                        <div style="display:flex;align-items:center;gap:0.75rem;">
+                          <input type="radio" name="ekspedisi" value="Pos Indonesia" data-ongkir="12000">
+                          <span style="font-size:1.25rem;" aria-hidden="true">📮</span>
+                          <div>
+                            <strong>Pos Indonesia Kilat Khusus</strong>
+                            <p class="text-muted text-sm">Estimasi 3-5 hari kerja</p>
+                          </div>
+                        </div>
+                        <span class="badge badge-teal">Rp 12.000</span>
+                      </label>
+                    </div>
+                  </div>
+
+                </div>
+              </section>
+
+            </div><!-- akhir kolom kiri -->
+
+            <!-- Sidebar: Ringkasan Biaya -->
+            <aside class="checkout-sidebar" aria-label="Ringkasan biaya pesanan">
+              <div class="card">
+                <div class="card-header">
+                  <h2 style="font-size:1.1rem;">💰 Ringkasan Biaya</h2>
+                </div>
+                <div class="card-body">
+                  <div class="order-summary">
+                    <div class="summary-row">
+                      <span>Subtotal Buku</span>
+                      <span id="ringkasan-subtotal">Rp 0</span>
+                    </div>
+                    <div class="summary-row">
+                      <span>Ongkos Kirim</span>
+                      <span id="ringkasan-ongkir">Rp 0</span>
+                    </div>
+                    <div class="summary-row total">
+                      <span>TOTAL BAYAR</span>
+                      <span id="ringkasan-total">Rp 0</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="card-footer">
+                  <button type="submit" class="btn btn-primary btn-block btn-lg" aria-label="Buat pesanan sekarang">
+                    🚀 Buat Pesanan
+                  </button>
+                  <p class="text-muted text-xs text-center" style="margin-top:0.75rem;">
+                    🔒 Transaksi Anda aman dan terenkripsi
+                  </p>
+                </div>
+              </div>
+            </aside>
+
+          </div><!-- akhir checkout-layout -->
+        </form>
+      </div>
+    </main>
+
+    <footer class="site-footer" role="contentinfo">
+      <div class="container">
+        <p>&copy; 2025 <strong>Pustaka Nusantara</strong> &mdash; Toko Buku Online Terpercaya</p>
+      </div>
+    </footer>
+  </div>
+
+  <!-- =============================================
+       MODAL: KONFIRMASI PESANAN
+       ============================================= -->
+  <div class="modal-overlay" id="modal-konfirmasi-checkout" role="dialog" aria-modal="true" aria-labelledby="modal-konfirmasi-title" aria-hidden="true">
+    <div class="modal-box modal-lg">
+      <div class="modal-header">
+        <h2 class="modal-title" id="modal-konfirmasi-title">📋 Konfirmasi Pesanan</h2>
+        <button class="modal-close" data-tutup-modal aria-label="Tutup modal">✕</button>
+      </div>
+      <div class="modal-body">
+        <p style="margin-bottom:1rem;color:var(--text-secondary);">Periksa kembali detail pesanan Anda sebelum memproses:</p>
+        <div id="ringkasan-konfirmasi">
+          <!-- Diisi oleh JS -->
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" data-tutup-modal>Kembali &amp; Edit</button>
+        <button class="btn btn-primary" id="btn-konfirmasi-pesan">✅ Ya, Buat Pesanan!</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- =============================================
+       MODAL: PESANAN BERHASIL
+       ============================================= -->
+  <div class="modal-overlay" id="modal-sukses-checkout" role="dialog" aria-modal="true" aria-labelledby="modal-sukses-title" aria-hidden="true">
+    <div class="modal-box modal-sm">
+      <div class="modal-body" style="text-align:center;padding:2.5rem 1.5rem;">
+        <div style="font-size:4rem;margin-bottom:1rem;animation:float 2s ease-in-out infinite;">🎉</div>
+        <h2 id="modal-sukses-title" style="color:var(--clr-success);margin-bottom:0.5rem;">Pesanan Berhasil!</h2>
+        <p style="color:var(--text-secondary);margin-bottom:1.5rem;">
+          Pesanan Anda sedang diproses. Gunakan Nomor DO berikut untuk melacak pengiriman:
+        </p>
+        <div style="background:var(--clr-primary-50);border:2px dashed var(--clr-primary-300);border-radius:var(--radius-md);padding:1rem;margin-bottom:1.5rem;">
+          <p class="text-muted text-sm" style="margin-bottom:4px;">Nomor Delivery Order (DO)</p>
+          <code id="do-berhasil" style="font-size:1.5rem;font-weight:700;color:var(--clr-primary-700);letter-spacing:2px;">-</code>
+        </div>
+        <div style="display:flex;gap:0.75rem;justify-content:center;flex-wrap:wrap;">
+          <button class="btn btn-secondary" id="btn-salin-do">📋 Salin Nomor DO</button>
+          <button class="btn btn-primary" id="btn-ke-tracking">🔍 Lacak Pesanan</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scroll to Top -->
+  <button id="scroll-top" aria-label="Kembali ke atas halaman">↑</button>
+
+  <!-- Toast Container -->
+  <div id="toast-container" aria-live="polite" aria-atomic="false"></div>
+
+  <script src="js/data.js"></script>
+  <script src="js/script.js"></script>
+</body>
+</html>
+
+

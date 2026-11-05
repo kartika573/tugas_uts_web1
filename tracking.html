@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Tracking Pengiriman - Pustaka Nusantara">
+  <title>Tracking Pengiriman | Pustaka Nusantara</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📚</text></svg>">
+  <link rel="stylesheet" href="css/style.css">
+
+  <!-- CSS INTERNAL: Gaya khusus halaman tracking -->
+  <style>
+    /* CSS INTERNAL - Khusus halaman tracking */
+    .tracking-search-box {
+      background: var(--bg-surface);
+      border-radius: var(--radius-xl);
+      border: 1px solid var(--border-color);
+      padding: 2rem;
+      box-shadow: var(--shadow-md);
+      margin-bottom: 2rem;
+    }
+
+    .tracking-input-group {
+      display: flex;
+      gap: 0.75rem;
+      margin-top: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .tracking-input-group input {
+      flex: 1;
+      min-width: 200px;
+      padding: 0.75rem 1rem;
+      font-size: 1.0625rem;
+      background: var(--bg-surface);
+      border: 2px solid var(--border-color);
+      border-radius: var(--radius-md);
+      color: var(--text-primary);
+      transition: all 0.2s;
+    }
+
+    .tracking-input-group input:focus {
+      outline: none;
+      border-color: var(--clr-primary-500);
+      box-shadow: 0 0 0 4px rgba(99,102,241,0.12);
+    }
+
+    .riwayat-section {
+      margin-top: 1rem;
+    }
+
+    .riwayat-label {
+      font-size: 0.8125rem;
+      color: var(--text-muted);
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+    }
+
+    #riwayat-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .info-coba {
+      background: var(--clr-primary-50);
+      border: 1px solid var(--clr-primary-200);
+      border-radius: var(--radius-md);
+      padding: 0.75rem 1rem;
+      font-size: 0.875rem;
+      color: var(--clr-primary-700);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin-top: 1rem;
+    }
+
+    [data-theme="dark"] .info-coba {
+      background: rgba(99,102,241,0.1);
+      border-color: rgba(99,102,241,0.3);
+      color: var(--clr-primary-300);
+    }
+
+    .info-coba button {
+      background: none;
+      border: 1px solid currentColor;
+      color: inherit;
+      border-radius: var(--radius-sm);
+      padding: 2px 8px;
+      cursor: pointer;
+      font-size: 0.8125rem;
+    }
+
+    .info-coba button:hover {
+      background: var(--clr-primary-100);
+    }
+
+    @media (max-width: 600px) {
+      .tracking-search-box { padding: 1.25rem; }
+    }
+  </style>
+</head>
+<body data-page="tracking">
+
+  <div class="page-wrapper">
+    <!-- Navbar -->
+    <div id="navbar-main"></div>
+
+    <main class="main-content">
+
+      <!-- Header -->
+      <header class="page-header" role="banner">
+        <div class="container">
+          <nav class="breadcrumb" aria-label="Breadcrumb">
+            <a href="dashboard.html">🏠 Dashboard</a>
+            <span class="breadcrumb-sep">›</span>
+            <span class="breadcrumb-current">Tracking Pengiriman</span>
+          </nav>
+          <h1>📦 Tracking Pengiriman</h1>
+          <p>Lacak status pengiriman pesanan Anda menggunakan Nomor DO</p>
+        </div>
+      </header>
+
+      <div class="container section">
+
+        <!-- Form Pencarian DO -->
+        <section class="tracking-search-box" aria-labelledby="heading-cari-do">
+          <h2 id="heading-cari-do" style="margin-bottom:0.25rem;">🔍 Lacak Pesanan</h2>
+          <p class="text-muted text-sm">Masukkan Nomor Delivery Order (DO) yang diterima saat checkout.</p>
+
+          <div class="tracking-input-group" role="search" aria-label="Pencarian Nomor DO">
+            <input
+              type="text"
+              id="input-nomor-do"
+              placeholder="Masukkan Nomor DO (cth: 20230012)"
+              aria-label="Nomor Delivery Order"
+              autocomplete="off"
+              maxlength="20"
+            >
+            <button class="btn btn-primary btn-lg" id="btn-cari-do" aria-label="Cari pengiriman berdasarkan Nomor DO">
+              🔍 Cari
+            </button>
+          </div>
+
+          <!-- Contoh DO untuk uji coba -->
+          <div class="info-coba" aria-label="Nomor DO contoh untuk uji coba">
+            💡 Coba:
+            <button class="btn-coba-do" data-do="20230012" aria-label="Lacak Nomor DO 20230012">20230012</button>
+            <button class="btn-coba-do" data-do="20230013" aria-label="Lacak Nomor DO 20230013">20230013</button>
+            <span class="text-muted"></span>
+          </div>
+
+          <!-- Riwayat Pencarian -->
+          <div class="riwayat-section" aria-label="Riwayat pencarian DO">
+            <p class="riwayat-label">🕐 Riwayat Pencarian:</p>
+            <div id="riwayat-chips" aria-live="polite">
+              <!-- Diisi oleh JS -->
+            </div>
+          </div>
+        </section>
+
+        <!-- Hasil Tracking (diisi oleh JS) -->
+        <section id="hasil-tracking" aria-live="polite" aria-label="Hasil pelacakan pengiriman">
+          <!-- Placeholder awal -->
+          <div class="empty-state" style="max-width:500px;margin:0 auto;">
+            <div class="empty-state-icon" aria-hidden="true">📦</div>
+            <h3>Lacak Pesanan Anda</h3>
+            <p>Masukkan Nomor DO di atas dan klik tombol "Cari" untuk melihat status pengiriman.</p>
+          </div>
+        </section>
+
+      </div>
+    </main>
+
+    <footer class="site-footer" role="contentinfo">
+      <div class="container">
+        <p>&copy; 2025 <strong>Pustaka Nusantara</strong> &mdash; Toko Buku Online Terpercaya</p>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Scroll to Top -->
+  <button id="scroll-top" aria-label="Kembali ke atas halaman">↑</button>
+
+  <!-- Toast Container -->
+  <div id="toast-container" aria-live="polite" aria-atomic="false"></div>
+
+  <script src="js/data.js"></script>
+  <script src="js/script.js"></script>
+</body>
+</html>
+
