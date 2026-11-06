@@ -1,6 +1,8 @@
-# 📚 Pustaka Nusantara — Toko Buku Online
+# 📚 Pustaka Nusantara
+### Website Toko Buku Online
 
-> **UTS Pemrograman Web 1** | Aplikasi Web Front-End Statis
+Project Ujian Tengah Semester
+Mata Kuliah Pemrograman Web 1
 
 [![HTML5](https://img.shields.io/badge/HTML5-Semantik-orange?logo=html5)](https://developer.mozilla.org/en-US/docs/Web/HTML)
 [![CSS3](https://img.shields.io/badge/CSS3-External%20|%20Internal%20|%20Inline-blue?logo=css3)](https://developer.mozilla.org/en-US/docs/Web/CSS)
