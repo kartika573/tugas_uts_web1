@@ -22,7 +22,7 @@
 
 ## 🎬 Video Penjelasan
 
-📹 **Link YouTube:** 
+📹 **Link YouTube:** https://youtu.be/Rq8ZAhVG9oo
 ---
 
 ## 🌐 Demo Online
