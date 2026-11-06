@@ -22,24 +22,23 @@ Mata Kuliah Pemrograman Web 1
 
 ---
 
-🎬 Video Demonstrasi
+## 🎬 Video Penjelasan
 
-Video presentasi dan demonstrasi fitur website Pustaka Nusantara dapat ditonton melalui tautan berikut:
+📹 **Link YouTube:**
 
-▶️ Tonton Video Demonstrasi
+https://youtu.be/Rq8ZAhVG9oo
 
-🌐 Demo Website
+▶️ [Tonton Video Demonstrasi di YouTube](https://youtu.be/Rq8ZAhVG9oo)
 
-Website Pustaka Nusantara dapat diakses secara online melalui GitHub Pages.
-
-🔗 Buka Website Pustaka Nusantara
-
-💻 Repository GitHub
-
-Source code dan dokumentasi project tersedia pada repository berikut:
-
-📁 Lihat Repository GitHub
 ---
+
+## 🌐 Demo Online
+
+🔗 **Link Demo:**
+
+https://kartika573.github.io/tugas_uts_web1/
+
+[🔗 Kunjungi Website Pustaka Nusantara](https://kartika573.github.io/tugas_uts_web1/)
 
 ## 📋 Daftar Fitur per Halaman
 
