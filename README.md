@@ -22,8 +22,7 @@
 
 ## 🎬 Video Penjelasan
 
-📹 **Link YouTube:** _(belum tersedia — video demo dapat ditambahkan setelah pengumpulan)_
-
+📹 **Link YouTube:** https://kartika573.github.io/tugas_uts_web1/
 ---
 
 ## 🌐 Demo Online
