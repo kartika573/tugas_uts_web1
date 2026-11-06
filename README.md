@@ -409,7 +409,7 @@ Satu file JS (`script.js`) mengelola semua halaman. Alih-alih mengecek `window.l
 
 ## 🔧 Catatan Perbaikan `data.js`
 
-Dua perbaikan dilakukan pada `data.js` sesuai instruksi soal:
+Dua perbaikan dilakukan pada `data.js`:
 
 1. **Path cover buku PAUD**:
    - ❌ Sebelum: `"img/paud_perkembangan.jpeg"`
