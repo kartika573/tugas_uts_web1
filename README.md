@@ -395,18 +395,15 @@ Satu file JS (`script.js`) mengelola semua halaman. Alih-alih mengecek `window.l
 
 ---
 
-## 🚀 Cara Menjalankan
+## 🚀 Cara Menjalankan Project
 
-1. **Clone atau Download** project ini
-2. **Buka folder** `tugas-uts-web1/`
-3. **Buka `index.html`** langsung di browser:
-   - Double-click file `index.html`, ATAU
-   - Klik kanan → "Open with" → pilih browser, ATAU
-   - Gunakan **VS Code Live Server** (klik kanan `index.html` → "Open with Live Server")
-4. **Login** menggunakan akun uji coba di atas
-5. Tidak perlu server, build tool, atau instalasi apapun!
+1. Download repository Pustaka Nusantara dari GitHub.
+2. Ekstrak file project jika diunduh dalam format ZIP.
+3. Buka folder project menggunakan Visual Studio Code.
+4. Jalankan file `index.html` melalui browser atau menggunakan ekstensi Live Server.
+5. Masuk menggunakan salah satu akun pengujian yang tersedia pada bagian Akun Uji Coba.
 
-> ⚠️ **Google Fonts** memerlukan koneksi internet. Jika offline, font akan fallback ke `sans-serif` / `serif` bawaan browser.
+**Catatan:** Project ini merupakan aplikasi front-end statis sehingga tidak memerlukan server backend maupun proses build tambahan. Koneksi internet diperlukan untuk memuat Google Fonts.
 
 ---
 
