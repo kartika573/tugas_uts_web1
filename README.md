@@ -22,12 +22,12 @@
 
 ## 🎬 Video Penjelasan
 
-📹 **Link YouTube:** https://kartika573.github.io/tugas_uts_web1/
+📹 **Link YouTube:** 
 ---
 
 ## 🌐 Demo Online
 
-🔗 **Link Demo:** _(buka `index.html` secara lokal dengan Live Server)_
+🔗 **Link Demo:** https://kartika573.github.io/tugas_uts_web1/
 
 ---
 
