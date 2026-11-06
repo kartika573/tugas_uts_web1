@@ -31,9 +31,15 @@ https://youtu.be/Rq8ZAhVG9oo
 ▶️ [Tonton Video Demonstrasi di YouTube](https://youtu.be/Rq8ZAhVG9oo)
 ---
 
-## 🌐 Demo Online
+## 🌐 Demo Website
 
-🔗 **Link Demo:** https://kartika573.github.io/tugas_uts_web1/
+Website Pustaka Nusantara dapat diakses melalui tautan berikut:
+
+**Link Demo:**
+
+https://kartika573.github.io/tugas_uts_web1/
+
+🔗 [Kunjungi Website Pustaka Nusantara](https://kartika573.github.io/tugas_uts_web1/)
 
 ---
 
