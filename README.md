@@ -24,7 +24,9 @@ Mata Kuliah Pemrograman Web 1
 
 ## 🎬 Video Penjelasan
 
-📹 **Link YouTube:** https://youtu.be/Rq8ZAhVG9oo
+Video ini berisi penjelasan dan demonstrasi fitur website Pustaka Nusantara.
+
+[▶️ Tonton Video Demonstrasi di YouTube](https://youtu.be/Rq8ZAhVG9oo)
 ---
 
 ## 🌐 Demo Online
